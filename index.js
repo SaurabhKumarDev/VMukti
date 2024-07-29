@@ -12,7 +12,7 @@ const connectToMongo = require('./config/db');
 // Run the database
 (async () => {
     await connectToMongo();
-})();
+})();       
 
 // Creating an express application instance
 const app = express();
