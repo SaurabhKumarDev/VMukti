@@ -117,10 +117,10 @@ const fetchUser = require("../middlewares/fetchUser");
 const registerController = require('../controllers/user/registerController');
 const loginController = require('../controllers/user/loginController');
 // const fetchController = require('../controllers/user/fetchUserController');
-// const updateController = require('../controllers/user/updateController');
+const updateController = require('../controllers/user/updateController');
 // const forgetPassword = require('../controllers/user/passwordForgetController');
 // const deleteUser = require('../controllers/user/deleteController');
-// const { allLoggedInDevice, ownLoginDevice } = require('../controllers/user/checkDeviceLoggedInController');
+const { allLogedInDevice, ownLoginDevice } = require('../controllers/user/checkDeviceLoggedInController');
 const { adminLogOut, userLogout } = require('../controllers/user/userLogoutController');
 const sessionHandler = require('../middlewares/session');
 
@@ -146,14 +146,14 @@ router.post('/logout', fetchUser, sessionHandler, userLogout);
 // // Fetch user
 // router.get('/fetch', fetchUser, fetchController);
 
-// // Update user
-// router.put('/update/:id', fetchUser, [
-//     body("name").optional().isLength({ min: 3 }).withMessage("Name length should be at least 3 characters"),
-//     body("email").optional().isEmail().withMessage("Enter a valid email"),
-//     body("role").optional().trim(),
-//     body("securityQuestion").optional().trim().isLength({ min: 3 }).withMessage("Enter a valid security question"),
-//     body("securityAnswer").optional().trim().isLength({ min: 3 }).withMessage("Enter a valid security answer")
-// ], updateController);
+// Update user by admin
+router.put('/update/:id', fetchUser, [
+    body("name").optional().isLength({ min: 3 }).withMessage("Name length should be at least 3 characters"),
+    body("email").optional().isEmail().withMessage("Enter a valid email"),
+    body("role").optional().trim(),
+    body("securityQuestion").optional().trim().isLength({ min: 3 }).withMessage("Enter a valid security question"),
+    body("securityAnswer").optional().trim().isLength({ min: 3 }).withMessage("Enter a valid security answer")
+], updateController);
 
 // // Forgot Password
 // router.patch('/forget', [
@@ -165,11 +165,11 @@ router.post('/logout', fetchUser, sessionHandler, userLogout);
 // // Delete user
 // router.delete('/delete/:id', fetchUser, deleteUser);
 
-// // All logged-in devices for the super admin
-// router.get('/loginfo', fetchUser, allLoggedInDevice);
+// All logged-in devices for the super admin
+router.get('/all/loginfo', fetchUser, allLogedInDevice);
 
-// // Specific user checks their own logged-in devices
-// router.get('/loginfo/:id', fetchUser, ownLoginDevice);
+// Specific user checks their own logged-in devices
+router.get('/loginfo', fetchUser, ownLoginDevice);
 
 // // Logging out via super admin to any device
 // router.delete('/logout/:id', fetchUser, adminLogOut);

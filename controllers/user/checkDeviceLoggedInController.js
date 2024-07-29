@@ -1,8 +1,8 @@
+const user = require('../../models/user');
+const loginInfo = require('../../models/loginInfo');
 
-
-
-module.exports = async function allLogedInDevice (req, res) {
-    // Check user & find role
+// All loggedIn devices information
+const allLogedInDevice = async (req, res) => {
     try {
         const isUserAuth = await user.findById(req.User);
         if (isUserAuth.role === "Super admin") {
@@ -14,34 +14,28 @@ module.exports = async function allLogedInDevice (req, res) {
                 return res.status(400).json({ error: "An error occured while fetching the loggedin user information", message: error.message })
             }
         } else {
-            console.log("Soory, you are not allow to check the user login information");
-            return res.status(401).json({ error: "Not authorized", message: "You are not authorized to check the logged in user details" })
+            console.log("Sorry, you are not authorized to check the logged-in user information");
+            return res.status(403).json({ error: "Permission denied", message: "You are not authorized to access the logged-in user details" });
         }
     } catch (error) {
-        console.error("Auth user not found");
-        res.status(404).json({ error: error.message, message: "Auth user not found" })
+        console.error(error);
+        res.status(500).json({ error: error.message })
     }
 }
 
-// Login info
-module.exports = async function OwnLoginDevice (req, res) {
-    // Check user & find role
+// Own login info
+const ownLoginDevice = async (req, res) => {
     try {
         const isUserAuth = await user.findById(req.User);
-        if (isUserAuth.role === "Super admin") {
-            try {
-                const loggedUser = await loginInfo.find({ user_id: req.params.id })
-                return res.status(200).json({ User: isUserAuth.email, LoggedInUser: loggedUser })
-            } catch (error) {
-                console.error(error);
-                return res.status(400).json({ error: "An error occured while fetching the loggedin user information", message: error.message })
-            }
-        } else {
-            console.log("Soory, you are not allow to check the user login information");
-            return res.status(401).json({ error: "Not authorized", message: "You are not authorized to check the logged in user details" })
+        if (!isUserAuth) {
+            return res.status(404).json({ error: "User not found", message: "Auth user not found" });
         }
+        const loggedUser = await loginInfo.find({ user_id: isUserAuth._id })
+        return res.status(200).json({ User: isUserAuth.email, LoggedInUser: loggedUser })
     } catch (error) {
-        console.error("Auth user not found");
-        res.status(404).json({ error: error.message, message: "Auth user not found" })
+        console.log(error);
+        res.status(500).json({ error: error.message })
     }
 }
+
+module.exports = { allLogedInDevice, ownLoginDevice }
