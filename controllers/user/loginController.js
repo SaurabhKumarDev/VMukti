@@ -52,8 +52,15 @@ module.exports = async (req, res) => {
         req.session.user = { id: userExist._id, email: userExist.email };
 
         // Store the cookie
-        res.cookie('session', req.sessionID);
-        res.cookie('jwt', authToken);
+        res.cookie('session', req.sessionID, {
+            maxAge: new Date(Date.now() + ((process.env.COOKIE_EXPIRE_MIN || 2) * 60 * 1000)),
+            expires: new Date(Date.now() + ((process.env.COOKIE_EXPIRE_MIN || 2) * 60 * 1000))
+        });
+        res.cookie('jwt', authToken, {
+            maxAge: new Date(Date.now() + ((process.env.COOKIE_EXPIRE_MIN || 2) * 60 * 1000)),
+            expires: new Date(Date.now() + ((process.env.COOKIE_EXPIRE_MIN || 2) * 60 * 1000))
+        });
+
 
         // Store the login information
         await LoginInfo.create({

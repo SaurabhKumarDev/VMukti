@@ -1,5 +1,5 @@
 const nodeMailer = require('nodemailer');
-const { v4: uuidv4 } = require('uuid');       
+const { v4: uuidv4 } = require('uuid');
 require('dotenv').config();
 const bcrypt = require('bcrypt');
 
@@ -37,7 +37,7 @@ const sendVerificationEmail = async ({ id, name, email }, res) => {
         </p> <p style="margin-bottom: 5px;">Thank you for signing up! To complete your registration and access your account, please verify your email address.</p> 
         <p style="margin-bottom: 5px;"><b>This verification link will expire in ${process.env.EMAIL_EXPIRE_MIN || 10} minutes.</b></p> 
         <p style="margin-bottom: 5px;">Click the button below to verify your email:</p> 
-        <a href="${currentURL}/emailservice/user/verify/${id}/${uniqueString}" style="margin-bottom: 5px; text-decoration: none;">Verify Your Email</a> 
+        <a href="${currentURL}/emailservice/user/reset-password/${id}/${uniqueString}" style="margin-bottom: 5px; text-decoration: none;">Verify Your Email</a> 
         <p style="margin-bottom: 5px;">If you didn't request this email, please ignore it.</p> 
         <p>Thank you,</p>
         <p>VMukti Solutions Pvt. Ltd</p>
@@ -81,17 +81,21 @@ const sendForgetEmail = async ({ id, name, email }, res) => {
         from: process.env.AUTH_EMAIL,
         to: email,
         subject: "Reset Your Password",
-        html: `<p style="margin-bottom: 5px;">Hi <b>${name},</b></p> <p style="margin-bottom: 5px;">It seems like you requested a password reset. Click the link below to reset your password:</p> <p style="margin-bottom: 5px;"><b>This link will expire in ${process.env.EMAIL_EXPIRE_MIN} minute.</b></p> <a href="${currentURL}/api/user/reset-password/${id}/${uniqueString}" style="margin-bottom: 5px; text-decoration: none;">Reset Your Password</a> <p style="margin-bottom: 5px;">If you didn't request this, please ignore this email.</p> <p>Thank you,</p><p>VMukti Solutions Pvt. Ltd</p>`,
+        html: `
+        <p style="margin-bottom: 5px;">Hi <b>${name},</b></p> 
+        <p style="margin-bottom: 5px;">It seems like you requested a password reset. Click the link below to reset your password:</p> 
+        <p style="margin-bottom: 5px;"><b>This link will expire in ${process.env.EMAIL_EXPIRE_MIN} minute.</b></p> 
+        <a href="${currentURL}/api/user/reset-password/${id}/${uniqueString}" style="margin-bottom: 5px; text-decoration: none;">Reset Your Password</a> 
+        <p style="margin-bottom: 5px;">If you didn't request this, please ignore this email.</p> 
+        <p>Thank you,</p>
+        <p>VMukti Solutions Pvt. Ltd</p>`,
     };
 
     try {
-        // Unique String convert into the hashed code
         const saltRounds = await bcrypt.genSalt(10)
         const hashedUniqueString = await bcrypt.hash(uniqueString, saltRounds);
 
-        // Verification expiry time :: Verification expiry time in minutes, defaulting to 10 minutes if not set
-        let expireTimeOfVerification = process.env.EMAIL_EXPIRE_MIN || 10;
-        expireTimeOfVerification = expireTimeOfVerification * 60 * 1000;
+        let expireTimeOfVerification = (process.env.EMAIL_EXPIRE_MIN || 10) * 60 * 1000;
 
         // Saving the Email Verification Info in DB
         const newResetPassword = await ForgetPassword.create({
@@ -100,11 +104,6 @@ const sendForgetEmail = async ({ id, name, email }, res) => {
             createdAt: Date.now(),
             expiresAt: Date.now() + expireTimeOfVerification,
         });
-
-        if (!newResetPassword) {
-            console.log("Forget password detail is not stored in the database");
-            return res.status(400).json({ error: "Saving issue occure in the db", message: "Information not stored in the database" })
-        }
 
         await transporter.sendMail(mailOptions);
         console.log("An email with the subject 'Reset Your Password' has been sent. Please check your inbox.");

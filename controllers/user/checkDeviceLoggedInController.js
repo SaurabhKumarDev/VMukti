@@ -7,7 +7,7 @@ const allLogedInDevice = async (req, res) => {
         const isUserAuth = await user.findById(req.User);
         if (isUserAuth.role === "Super admin") {
             try {
-                const loggedUser = await loginInfo.find({})
+                const loggedUser = await loginInfo.find({user_id: req.params.id})
                 return res.status(200).json({ User: isUserAuth.email, LoggedInUser: loggedUser })
             } catch (error) {
                 console.error(error);

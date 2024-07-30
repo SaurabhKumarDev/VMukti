@@ -1,25 +1,13 @@
-// Fetch users
+const user = require('../../models/user');
+
 module.exports = async (req, res) => {
-    try {
+    try {    
         // Retrieve user using ID
         const retrieveUser = await user.findById(req.User);
         if (!retrieveUser) {
             console.log("User token expired. Please log in again to continue.");
             return res.status(400).json({ message: "User token expired. Please log in again to continue" });
         }
-
-        // Check session
-        // const sessionDetail = await SessionSchema.find({})
-        // if (sessionDetail) {
-        //     return res.send(sessionDetail)
-        // } else {
-        //     return res.send({ error: 'some error occure', sessionDetail, id: req.sessionDetail })
-        // }
-
-        // if (req.sessionID !== req.sessionDetail) {
-        //     console.log("Session expired. Please log in again.");
-        //     return res.status(400).json({ error: "Session expired. Please log in again." })
-        // }
 
         // Fetch data based on user role
         let responseData = {};
@@ -52,7 +40,6 @@ module.exports = async (req, res) => {
         }
 
         // Result
-        console.log(`Detail Fetched By : ${retrieveUser.email}`);
         res.status(200).json({ user: retrieveUser.email, Detail: responseData });
     } catch (error) {
         console.error(error.message);

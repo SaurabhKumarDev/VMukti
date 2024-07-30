@@ -116,10 +116,10 @@ const fetchUser = require("../middlewares/fetchUser");
 // Importing controllers
 const registerController = require('../controllers/user/registerController');
 const loginController = require('../controllers/user/loginController');
-// const fetchController = require('../controllers/user/fetchUserController');
+const fetchController = require('../controllers/user/fetchUserController');
 const updateController = require('../controllers/user/updateController');
-// const forgetPassword = require('../controllers/user/passwordForgetController');
-// const deleteUser = require('../controllers/user/deleteController');
+const forgetPassword = require('../controllers/user/passwordForgetController');
+const deleteUser = require('../controllers/user/deleteController');
 const { allLogedInDevice, ownLoginDevice } = require('../controllers/user/checkDeviceLoggedInController');
 const { adminLogOut, userLogout } = require('../controllers/user/userLogoutController');
 const sessionHandler = require('../middlewares/session');
@@ -140,13 +140,10 @@ router.post('/login', [
     body('password').notEmpty().trim().withMessage("Password should be strong")
 ], loginController);
 
-// Log out by the user where multiple devices are logged in using their credentials
-router.post('/logout', fetchUser, sessionHandler, userLogout);
-
 // // Fetch user
-// router.get('/fetch', fetchUser, fetchController);
+router.get('/fetch', fetchUser, fetchController);
 
-// Update user by admin
+// Update user by admin & Own
 router.put('/update/:id', fetchUser, [
     body("name").optional().isLength({ min: 3 }).withMessage("Name length should be at least 3 characters"),
     body("email").optional().isEmail().withMessage("Enter a valid email"),
@@ -155,25 +152,26 @@ router.put('/update/:id', fetchUser, [
     body("securityAnswer").optional().trim().isLength({ min: 3 }).withMessage("Enter a valid security answer")
 ], updateController);
 
-// // Forgot Password
-// router.patch('/forget', [
-//     body('email').notEmpty().trim().isEmail().withMessage("Enter correct email address"),
-//     body("securityQuestion").notEmpty().trim().isLength({ min: 3 }).withMessage("Enter correct security question"),
-//     body("securityAnswer").notEmpty().trim().isLength({ min: 3 }).withMessage("Enter correct security answer")
-// ], forgetPassword);
+// Forgot Password
+router.patch('/forget', [
+    body('email').notEmpty().trim().isEmail().withMessage("Enter correct email address"),
+    body("securityQuestion").notEmpty().trim().isLength({ min: 3 }).withMessage("Enter correct security question"),
+    body("securityAnswer").notEmpty().trim().isLength({ min: 3 }).withMessage("Enter correct security answer")
+], forgetPassword);
 
-// // Delete user
-// router.delete('/delete/:id', fetchUser, deleteUser);
+// // Delete user Own & Via admin
+router.delete('/delete/:id', fetchUser, deleteUser);
 
 // All logged-in devices for the super admin
-router.get('/all/loginfo', fetchUser, allLogedInDevice);
+router.get('/all/loginfo/:id', fetchUser, allLogedInDevice);
 
 // Specific user checks their own logged-in devices
 router.get('/loginfo', fetchUser, ownLoginDevice);
 
+// Log out by the user where multiple devices are logged in using their credentials
+router.post('/logout', fetchUser, sessionHandler, userLogout);
+
 // // Logging out via super admin to any device
 // router.delete('/logout/:id', fetchUser, adminLogOut);
-
-
 
 module.exports = router;
