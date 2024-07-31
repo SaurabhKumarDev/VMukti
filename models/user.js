@@ -1,133 +1,6 @@
-// const mongoose = require('mongoose');
-// const { Schema } = mongoose;
-// const jwt = require("jsonwebtoken")
-
-// const userSchema = new Schema({
-
-//     // SignUp : First page
-//     name: {
-//         type: String,
-//         required: true,
-//         trim: true
-//     },
-//     phone: {
-//         type: Number,
-//         required: true,
-//         trim: true
-//     },
-//     role: {
-//         type: String,
-//         default: "User"
-//     },
-//     email: {
-//         type: String,
-//         required: true,
-//         unique: true,
-//         trim: true
-//     },
-//     password: {
-//         type: String,
-//         required: true,
-//         trim: true
-//     },
-//     date: {
-//         type: Date,
-//         default: Date.now
-//     },
-
-//     // Account active ?
-//     isAccountActive: {
-//         type: Boolean,
-//         default: false,
-//         required: true
-//     },
-
-//     // SignUP : Second page (For forget password)
-//     securityQuestion: {
-//         type: String,
-//         trim: true,
-//         default: "How are you"
-//     },
-//     securityAnswer: {
-//         type: String,
-//         trim: true,
-//         default: "Fine"
-//     },
-
-//     // Check either data verified
-//     isPhoneVerified: {
-//         type: Boolean,
-//         default: false
-//     },
-//     isEmailVerified: {
-//         type: Boolean,
-//         default: false
-//     },
-
-//     // Last login device information
-//     lastLogin: {
-//         type: Date
-//     },
-//     // lastLoginDevice: {
-//     //     type: String,
-//     //     default: "Linux"
-//     // },
-//     // lastLoginBrowser: {
-//     //     type: String,
-//     //     default: "Chrome"
-//     // },
-
-//     // If password is wrong entered 3 times, Lock.
-//     loginAttempts: {
-//         type: Number,
-//         required: true,
-//         default: 0
-//     },
-//     // Lock untill 24 Hour
-//     lockUntil: {
-//         type: Number
-//     },
-
-//     //Storing token of the loggedIN Device
-//     tokens: [{
-//         token : {
-//         type: String,
-//         required: true
-//         }
-//     }]
-// })
-
-
-// // Generating the authentication token
-// userSchema.methods.getAuthToken = async () => {
-//     try {
-//         const data = { User: { id: this._id } };
-//         const authToken = await jwt.sign(data, process.env.JWT_SECRET_KEY, {
-//             expiresIn: '7d'
-//         })
-//         // Storing the token
-//         this.tokens = this.tokens.concat({token: authToken})
-//         await this.save();
-//         console.log(authToken);
-//         return authToken;
-//     } catch (error) {
-//         console.error(error);
-//         // return res.status(400).json({error: "Sory some error occure while creating the json web token",message: error.message});
-//     }
-// }
-
-
-
-// module.exports = mongoose.model('User', userSchema);
-
-
-
-
-
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
 const jwt = require("jsonwebtoken");
-
 
 const userSchema = new Schema({
 
@@ -159,10 +32,23 @@ const userSchema = new Schema({
         trim: true
     },
 
+    // SignUp: Second page (For forget password)
+    securityQuestion: {
+        type: String,
+        trim: true,
+        default: "Enter your project name"
+    },
+    securityAnswer: {
+        type: String,
+        trim: true,
+        default: "Cris"
+    },
+
     // Account creating date
     accountCreationDate: {
         type: Date,
-        default: Date.now
+        default: Date.now,
+        required: true
     },
 
     // Check if data is verified
@@ -201,43 +87,14 @@ const userSchema = new Schema({
             required: true
         }
     }],
-
-    // SignUp: Second page (For forget password)
-    securityQuestion: {
-        type: String,
-        trim: true,
-        default: "Enter your project name"
-    },
-    securityAnswer: {
-        type: String,
-        trim: true,
-        default: "Cris"
-    },
-
-    // Last login device information
-    // lastLogin: {
-    //     type: Date
-    // },
-    // lastLoginDevice: {
-    //     type: String,
-    //     default: "Linux"
-    // },
-    // lastLoginBrowser: {
-    //     type: String,
-    //     default: "Chrome"
-    // },
-
 }, {
-    timestamps: true // Adds createdAt and updatedAt automatically
+    timestamps: true
 });
 
 // Generating the authentication token
 userSchema.methods.getAuthToken = async function () {
     try {
-        // JWT with expiry time
-
         const data = { User: { id: this._id } };
-
         const authToken = jwt.sign(data, process.env.JWT_SECRET_KEY, {
             expiresIn: ((process.env.JWT_EXPIRE_TIME_MIN || 1) * 60 * 100)
         });
@@ -245,6 +102,7 @@ userSchema.methods.getAuthToken = async function () {
         // Reset login attempts on successful login
         this.loginAttempts = 0;
         this.lockUntil = null;
+        this.isAccountActive = true;
 
         // Storing the token
         this.tokens = this.tokens.concat({ token: authToken });
@@ -267,7 +125,7 @@ userSchema.methods.incrementLoginAttempt = async function () {
         this.loginAttempts += 1;
         if (this.loginAttempts >= 3) {
             this.isAccountActive = false;
-            this.lockUntil = new Date(Date.now() + ((process.env.LOCK_UNTIL_MIN || 10) * 60 * 1000));  // Lock in minute
+            this.lockUntil = new Date(Date.now() + ((process.env.LOCK_UNTIL_MIN || 10) * 60 * 1000));
         }
         await this.save();
     } catch (error) {

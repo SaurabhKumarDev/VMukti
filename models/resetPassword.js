@@ -19,11 +19,9 @@ const resetPassword = new Schema({
         type: Date,
         required: true,
         default: function () {
-            return new Date(Date.now() + (process.env.EMAIL_EXPIRE_MIN || 10) * 60 * 1000); 
+            return new Date(Date.now() + (process.env.EMAIL_EXPIRE_MIN || 10) * 60 * 1000);
         }
     }
-}, {
-    timestamps: true // Adds createdAt and updatedAt automatically
-});
+})
 
 module.exports = mongoose.model('resetPassword', resetPassword);

@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
+require('dotenv').config();
 
 const emailVerificationSchema = new Schema({
     userId: {
@@ -19,7 +20,7 @@ const emailVerificationSchema = new Schema({
         type: Date,
         required: true,
         default: function () {
-            return new Date(Date.now() + 24 * 60 * 60 * 1000); // Expires in 24 hours
+            return new Date(Date.now() + ((process.env.EMAIL_EXPIRE_MIN || 10) * 60 * 1000)); // Expires in 24 hours
         }
     }
 });
