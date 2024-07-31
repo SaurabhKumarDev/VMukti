@@ -1,13 +1,12 @@
 const express = require("express");
+const cookieParser = require('cookie-parser');
+const bodyParser = require('body-parser')
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
 const helmet = require("helmet");
 const cors = require("cors");
 require('dotenv').config();
 const connectToMongo = require('./config/db');
-// const errorHandler = require('./middleware/errorHandling');
-// const RedisStore = require('connect-redis')(session);
-// const redis = require('redis');
 
 // Run the database
 (async () => {
@@ -19,14 +18,19 @@ const app = express();
 // Port number
 const port = process.env.PORT || 3000;
 
-// const redisClient = redis.createClient();
-
+// Body parser
+app.use(bodyParser.json())
+// Cookie parsar
+app.use(cookieParser());
 // Parsing incoming request bodies as JSON
 app.use(express.json())
 // Secure your page by hiding some header details like website technology
 app.use(helmet())
 // Allow two ports to execute
-app.use(cors())
+app.use(cors({
+    origin: "http://localhost:3000",
+    credentials: true
+}))
 
 // Session configuration
 app.use(session({
@@ -38,22 +42,30 @@ app.use(session({
         collectionName: "session"
     }),
     cookie: {
-        // maxAge: 1000 * 60 * 60 * 24 * 7 // Session age is 7 days
-        maxAge: 1000 * 60 * (process.env.SESSION_AGE_MIN || 1) // 1 minute
+        maxAge: 1000 * 60 * (process.env.SESSION_AGE_MIN || 1),
+        secure: false
     }
 }));
 
-// Routes
-// app.use('/api/camerastatus', require('./routes/cameraStatus'))
+// Route to set a cookie
+app.get('/set-cookie', (req, res) => {
+    res.cookie('user', 'John Doe', { maxAge: 24 * 60 * 60 * 1000, httpOnly: true });
+    res.json({ message: 'Cookie has been set' });
+});
+app.get('/clear-cookie', (req, res) => {
+    res.clearCookie('user');
+    res.send("cookie clear successfully")
+});
+
+// Route
 app.use('/api/user', require('./routes/user'));
 app.use('/emailservice/user', require('./routes/handleEmail'))
+// app.use('/api/camerastatus', require('./routes/cameraStatus'))
 // app.use('/api/camera', require("./routes/cammera"))
+
 app.get('/', (req, res) => {
     res.send("Home Page");
 })
-
-// Error handling, always use before listening the port
-// app.use(errorHandler);
 
 // Express server to listen on the specified port
 app.listen(port, () => {

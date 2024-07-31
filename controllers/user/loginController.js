@@ -53,12 +53,16 @@ module.exports = async (req, res) => {
 
         // Store the cookie
         res.cookie('session', req.sessionID, {
-            maxAge: new Date(Date.now() + ((process.env.COOKIE_EXPIRE_MIN || 2) * 60 * 1000)),
-            expires: new Date(Date.now() + ((process.env.COOKIE_EXPIRE_MIN || 2) * 60 * 1000))
+            maxAge: process.env.COOKIE_EXPIRE_MIN * 60 * 1000 || 2 * 60 * 1000, // Default to 2 minutes
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production', // Set to true in production
+            sameSite: 'Lax'
         });
         res.cookie('jwt', authToken, {
-            maxAge: new Date(Date.now() + ((process.env.COOKIE_EXPIRE_MIN || 2) * 60 * 1000)),
-            expires: new Date(Date.now() + ((process.env.COOKIE_EXPIRE_MIN || 2) * 60 * 1000))
+            maxAge: process.env.COOKIE_EXPIRE_MIN * 60 * 1000 || 2 * 60 * 1000, // Default to 2 minutes
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production', // Set to true in production
+            sameSite: 'Lax'
         });
 
 

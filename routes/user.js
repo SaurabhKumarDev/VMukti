@@ -58,9 +58,9 @@ router.get('/all/loginfo/:id', fetchUser, allLogedInDevice);
 router.get('/loginfo', fetchUser, ownLoginDevice);
 
 // Log out by the user where multiple devices are logged in using their credentials
-router.post('/logout', fetchUser, sessionHandler, userLogout);
+router.get('/logout', fetchUser, sessionHandler, userLogout);
 
 // Logging out via super admin to any device
-router.delete('/logout/:id', fetchUser, adminLogOut);
+router.delete('/admin/logout/:id', fetchUser, adminLogOut);
 
 module.exports = router;

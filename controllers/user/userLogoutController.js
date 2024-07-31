@@ -44,14 +44,12 @@ module.exports.userLogout = async (req, res) => {
         // Extract the token from the request header
         const token = req.header('Auth-token');
 
-        // Storing logout info
+        // Update logout info
         await LoginInfo.updateOne(
             { user_id: req.session.user.id },
             { $set: { logout_time: Date.now(), status: "Not Active" } },
             { new: true }
         );
-
-        // Remove the specific token from the user's token array
         await User.findByIdAndUpdate(req.session.user.id, { $pull: { tokens: { token: token } } });
         
         // Session outing
