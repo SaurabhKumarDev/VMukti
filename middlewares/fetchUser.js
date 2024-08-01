@@ -1,8 +1,9 @@
 // Importing the jsonwebtoken
+const user = require('../models/user');
 const jwt = require("jsonwebtoken");
 
 // Exporting function
-module.exports = (req, res, next) => {
+module.exports = async (req, res, next) => {
 
     // Taking authtoken from the header
     const authToken = req.header("Auth-Token");
@@ -17,7 +18,12 @@ module.exports = (req, res, next) => {
     try {
         const isCorrectToken = jwt.verify(authToken, process.env.JWT_SECRET_KEY);
 
-        // 'req.User' fetched where you call the fetchUser functionality
+        const isValidToken = await user.findOne({ _id: isCorrectToken.User.id, 'tokens.token': authToken })
+        if (!isValidToken) {
+            console.error("Invalid token, login again");
+            return res.status(400).json({ error: "Provided token is invalid", message: "Login again"})
+        }
+
         // Extracting the User from isCorrectToken
         req.User = isCorrectToken.User.id;
 

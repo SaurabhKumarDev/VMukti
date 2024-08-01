@@ -10,6 +10,7 @@ const updateController = require('../controllers/user/updateController');
 const forgetPassword = require('../controllers/user/passwordForgetController');
 const deleteUser = require('../controllers/user/deleteController');
 const { allLogedInDevice, ownLoginDevice } = require('../controllers/user/checkDeviceLoggedInController');
+// const { adminLogOut} = require('../controllers/user/userLogoutController')
 const { adminLogOut, userLogout } = require('../controllers/user/userLogoutController');
 const sessionHandler = require('../middlewares/session');
 
@@ -58,7 +59,7 @@ router.get('/all/loginfo/:id', fetchUser, allLogedInDevice);
 router.get('/loginfo', fetchUser, ownLoginDevice);
 
 // Log out by the user where multiple devices are logged in using their credentials
-router.get('/logout', fetchUser, sessionHandler, userLogout);
+router.get('/logout', fetchUser, userLogout);
 
 // Logging out via super admin to any device
 router.delete('/admin/logout/:id', fetchUser, adminLogOut);
