@@ -16,31 +16,24 @@ const adminLogOut = async (req, res) => {
             return res.status(401).json({ error: "Permission denied", message: "You are not authorized to check the logged-in user details" });
         }
 
-        const token = req.header('Auth-token');
+        // Check if the user is active
+        const userActive = await LoginInfo.findById(userIdToLogout);
+        if (!userActive || userActive.status === "Not Active") {
+            console.log("User already logged out");
+            return res.status(400).json({ message: "User already logged out" });
+        }
 
         // Update logout info
-        await LoginInfo.updateOne(
-            { user_id: userIdToLogout },
-            { $set: { logout_time: Date.now(), status: "Not Active" } }
+        await LoginInfo.findByIdAndUpdate(
+            userIdToLogout,
+            { $set: { logout_time: Date.now(), status: "Not Active" } },
+            { new: true }
         );
-        await User.findByIdAndUpdate(userIdToLogout, { $pull: { 'tokens': { token } } });
 
-        // const userToLogout = await LoginInfo.findById(userIdToLogout);
-
-        // if (!userToLogout) {
-        //     return res.status(404).json({ error: "User not found", message: "User may have been deleted already" });
-        // }
-
-        // const userToLogoutId = userToLogout.user_id;
-        // const tokenToLogout = userToLogout.token;
-
-        // Remove the token from the user's token array
-        // await User.findByIdAndUpdate(userToLogoutId, { $pull: { tokens: { token: tokenToLogout } } });
-
-        // Delete the login info document
-        await LoginInfo.findOneAndDelete({user_id: userIdToLogout});
-
-        console.log(`User logged out : ${userIdToLogout} , Removed by the : ${req.User}`);
+        const userId = userActive.user_id;
+        await User.updateOne({_id: userId}, { $pull: { 'tokens': { token: userActive.token } } });
+        // res.clearCookie('jwt')
+        console.log(`User logged out: ${userActive.user_id}, Removed by: ${req.User}`);
         return res.status(200).json({ message: "User logged out and deleted from our database successfully" });
     } catch (error) {
         console.error("An error occurred while logging out the user", error);
@@ -52,31 +45,28 @@ const adminLogOut = async (req, res) => {
 const userLogout = async (req, res) => {
     try {
         // Extract the token from the request header
-        const token = req.header('Auth-token');
+        // const token = req.header('Auth-token');
+        const token = req.cookies['jwt']
 
         // Update logout info
-        await LoginInfo.updateOne(
-            { user_id: req.User },
+        const userActive = await LoginInfo.findOneAndUpdate(
+            { token },
             { $set: { logout_time: Date.now(), status: "Not Active" } },
             { new: true }
         );
+
+        if (!userActive) {
+            return res.status(400).json({ message: "User is already logged out or invalid token" });
+        }
+
         await User.findByIdAndUpdate(req.User, { $pull: { 'tokens': { token } } });
-
-        // Session outing
-        // req.session.destroy(async (err) => {
-        //     if (err) {
-        //         return res.status(500).json({ error: "Could not log out", message: "Session destruction failed" });
-        //     }
-
-        //     console.log("User logged out successfully");
-        //     return res.status(204).json({ message: "User logged out successfully" });
-        // });
-        console.log("User Logged out successfully");
-        return res.status(200).json({message:"User logged out succssfully"})
+        res.clearCookie('jwt')
+        console.log("User logged out successfully");
+        return res.status(200).json({ message: "User logged out successfully" });
     } catch (error) {
         console.error("An error occurred during user logout", error);
         return res.status(500).json({ error: error.message, message: "An error occurred during user logout" });
     }
 };
 
-module.exports = {adminLogOut, userLogout}
+module.exports = { adminLogOut, userLogout };

@@ -62,6 +62,6 @@ router.get('/loginfo', fetchUser, ownLoginDevice);
 router.get('/logout', fetchUser, userLogout);
 
 // Logging out via super admin to any device
-router.delete('/admin/logout/:id', fetchUser, adminLogOut);
+router.get('/admin/logout/:id', fetchUser, adminLogOut);
 
 module.exports = router;

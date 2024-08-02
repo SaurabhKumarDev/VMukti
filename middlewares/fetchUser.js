@@ -6,8 +6,9 @@ const jwt = require("jsonwebtoken");
 module.exports = async (req, res, next) => {
 
     // Taking authtoken from the header
-    const authToken = req.header("Auth-Token");
-
+    // const authToken = req.header("Auth-Token");
+    const authToken = req.cookies['jwt']
+    
     // Checking the token is exist or not
     if (!authToken) {
         console.log("Authentication token is missing from the request header");
@@ -20,8 +21,9 @@ module.exports = async (req, res, next) => {
 
         const isValidToken = await user.findOne({ _id: isCorrectToken.User.id, 'tokens.token': authToken })
         if (!isValidToken) {
+            res.clearCookie('jwt')
             console.error("Invalid token, login again");
-            return res.status(400).json({ error: "Provided token is invalid", message: "Login again"})
+            return res.status(401).json({ error: "Provided token is invalid", message: "Login again" })
         }
 
         // Extracting the User from isCorrectToken

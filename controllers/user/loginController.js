@@ -58,8 +58,14 @@ module.exports = async (req, res) => {
             secure: process.env.NODE_ENV === 'production', // Set to true in production
             sameSite: 'Lax'
         });
-        res.cookie('jwt', authToken, {
-        });
+        // Setting the cookie
+res.cookie('jwt', authToken, {
+    httpOnly: true, // Prevents JavaScript access to the cookie
+    secure: process.env.NODE_ENV === 'production', // Ensures the cookie is only sent over HTTPS in production
+    sameSite: 'strict', // Ensures the cookie is sent only to the same site
+    path: '/' // Cookie is accessible throughout the entire site
+});
+
 
 
         // Store the login information

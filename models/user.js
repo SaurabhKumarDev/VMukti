@@ -84,7 +84,8 @@ const userSchema = new Schema({
     tokens: [{
         token: {
             type: String,
-            required: true
+            required: true,
+            _id: false
         }
     }],
 }, {
