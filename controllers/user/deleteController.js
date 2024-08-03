@@ -6,7 +6,7 @@ const deleteUser = async (res, targetUserId, deleteThisUser) => {
     return res.status(200).json({ message: "User removed successfully", deletedUser: deleteThisUser.email });
 };
 
-module.exports = async (req, res) => {
+const adminRemoveUser = async (req, res) => {
     try {
         const userId = req.User;
         const targetUserId = req.params.id;
@@ -65,3 +65,27 @@ module.exports = async (req, res) => {
         return res.status(500).json({ message: "Some error occure while removing the user from the database", error: error });
     }
 }
+
+const selfAccountDeletion = async (req, res) => {
+    try {
+        // User Id of the user who is trying to delete their account
+        const userId = req.User;
+        const removeThisUser = await user.findById(userId);
+        if (!removeThisUser) {
+            console.log("User not found");
+            return res.status(404).json({ message: "User not found" });
+        }
+        
+        // Deleting the user
+        const deleteThisUser = await user.findByIdAndDelete(userId);
+        
+        // Response
+        console.log("User removed successfully");
+        return res.status(200).json({ message: "User removed successfully", deletedUser: removeThisUser.email });
+    } catch (error) {
+        console.error("Internal server error");
+        return res.status(500).json({ message: "Some error occure while removing the user from the database", error: error });
+    }
+}
+
+module.exports = { adminRemoveUser, selfAccountDeletion }

@@ -8,11 +8,10 @@ const loginController = require('../controllers/user/loginController');
 const fetchController = require('../controllers/user/fetchUserController');
 const updateController = require('../controllers/user/updateController');
 const forgetPassword = require('../controllers/user/passwordForgetController');
-const deleteUser = require('../controllers/user/deleteController');
+const { selfAccountDeletion, adminRemoveUser } = require('../controllers/user/deleteController');
 const { allLogedInDevice, ownLoginDevice } = require('../controllers/user/checkDeviceLoggedInController');
-// const { adminLogOut} = require('../controllers/user/userLogoutController')
 const { adminLogOut, userLogout } = require('../controllers/user/userLogoutController');
-const sessionHandler = require('../middlewares/session');
+// const sessionHandler = require('../middlewares/session');
 
 // Register
 router.post('/register', [
@@ -49,8 +48,11 @@ router.patch('/forget', [
     body("securityAnswer").notEmpty().trim().isLength({ min: 3 }).withMessage("Enter correct security answer")
 ], forgetPassword);
 
-// Delete user Own & Via admin
-router.delete('/delete/:id', fetchUser, deleteUser);
+// Delete user account by admin
+router.delete('/delete/:id', fetchUser, adminRemoveUser);
+
+// Delete user account by user
+router.delete('/delete', fetchUser, selfAccountDeletion);
 
 // All logged-in devices for the super admin
 router.get('/all/loginfo/:id', fetchUser, allLogedInDevice);

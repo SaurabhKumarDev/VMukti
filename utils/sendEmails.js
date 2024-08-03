@@ -37,7 +37,7 @@ const sendVerificationEmail = async ({ id, name, email }, res) => {
         </p> <p style="margin-bottom: 5px;">Thank you for signing up! To complete your registration and access your account, please verify your email address.</p> 
         <p style="margin-bottom: 5px;"><b>This verification link will expire in ${process.env.EMAIL_EXPIRE_MIN || 10} minutes.</b></p> 
         <p style="margin-bottom: 5px;">Click the button below to verify your email:</p> 
-        <a href="${currentURL}/emailservice/user/reset-password/${id}/${uniqueString}" style="margin-bottom: 5px; text-decoration: none;">Verify Your Email</a> 
+        <a href="${currentURL}/emailservice/user/verify/${id}/${uniqueString}" style="margin-bottom: 5px; text-decoration: none;">Verify Your Email</a> 
         <p style="margin-bottom: 5px;">If you didn't request this email, please ignore it.</p> 
         <p>Thank you,</p>
         <p>VMukti Solutions Pvt. Ltd</p>
@@ -60,7 +60,6 @@ const sendVerificationEmail = async ({ id, name, email }, res) => {
 
         try {
             await transporter.sendMail(mailOptions);
-            console.log("Email sent successfully");
         } catch (error) {
             console.error("Error sending email:", error);
             throw new Error("Email sending failed");
@@ -85,7 +84,7 @@ const sendForgetEmail = async ({ id, name, email }, res) => {
         <p style="margin-bottom: 5px;">Hi <b>${name},</b></p> 
         <p style="margin-bottom: 5px;">It seems like you requested a password reset. Click the link below to reset your password:</p> 
         <p style="margin-bottom: 5px;"><b>This link will expire in ${process.env.EMAIL_EXPIRE_MIN} minute.</b></p> 
-        <a href="${currentURL}/api/user/reset-password/${id}/${uniqueString}" style="margin-bottom: 5px; text-decoration: none;">Reset Your Password</a> 
+        <a href="${currentURL}/emailservice/user/reset-password/${id}/${uniqueString}" style="margin-bottom: 5px; text-decoration: none;">Reset Your Password</a> 
         <p style="margin-bottom: 5px;">If you didn't request this, please ignore this email.</p> 
         <p>Thank you,</p>
         <p>VMukti Solutions Pvt. Ltd</p>`,
