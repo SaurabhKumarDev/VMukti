@@ -61,6 +61,7 @@ const userLogout = async (req, res) => {
 
         await User.findByIdAndUpdate(req.User, { $pull: { 'tokens': { token } } });
         res.clearCookie('jwt')
+        res.clearCookie('session')
         console.log("User logged out successfully");
         return res.status(200).json({ message: "User logged out successfully" });
     } catch (error) {

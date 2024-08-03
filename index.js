@@ -47,21 +47,11 @@ app.use(session({
     }
 }));
 
-// Route to set a cookie
-app.get('/set-cookie', (req, res) => {
-    res.cookie('user', 'John Doe', { maxAge: 24 * 60 * 60 * 1000, httpOnly: true });
-    res.json({ message: 'Cookie has been set' });
-});
-app.get('/clear-cookie', (req, res) => {
-    res.clearCookie('user');
-    res.send("cookie clear successfully")
-});
-
 // Route
 app.use('/api/user', require('./routes/user'));
 app.use('/emailservice/user', require('./routes/handleEmail'))
 // app.use('/api/camerastatus', require('./routes/cameraStatus'))
-// app.use('/api/camera', require("./routes/cammera"))
+app.use('/api/camera', require("./routes/cammera"))
 
 app.get('/', (req, res) => {
     res.send("Home Page");

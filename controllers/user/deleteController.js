@@ -77,7 +77,7 @@ const selfAccountDeletion = async (req, res) => {
         }
         
         // Deleting the user
-        const deleteThisUser = await user.findByIdAndDelete(userId);
+        await user.findByIdAndDelete(userId);
         
         // Response
         console.log("User removed successfully");

@@ -54,17 +54,17 @@ module.exports = async (req, res) => {
         // Store the cookie
         res.cookie('session', req.sessionID, {
             maxAge: process.env.COOKIE_EXPIRE_MIN * 60 * 1000 || 2 * 60 * 1000, // Default to 2 minutes
-            httpOnly: true,
-            secure: process.env.NODE_ENV === 'production', // Set to true in production
-            sameSite: 'lax', // Ensures the cookie is sent only to the same site
+            // httpOnly: true,
+            // secure: process.env.NODE_ENV === 'production', // Set to true in production
+            // sameSite: 'lax', // Ensures the cookie is sent only to the same site
         });
         // Setting the cookie
         res.cookie('jwt', authToken, {
             maxAge: process.env.COOKIE_EXPIRE_MIN * 60 * 1000 || 2 * 60 * 1000, // Default to 2 minutes
-            httpOnly: true, // Prevents JavaScript access to the cookie
-            secure: process.env.NODE_ENV === 'production', // Ensures the cookie is only sent over HTTPS in production
-            sameSite: 'strict', // Ensures the cookie is sent only to the same site
-            path: '/' // Cookie is accessible throughout the entire site
+            // httpOnly: true, // Prevents JavaScript access to the cookie
+            // secure: process.env.NODE_ENV === 'production', // Ensures the cookie is only sent over HTTPS in production
+            // sameSite: 'strict', // Ensures the cookie is sent only to the same site
+            // path: '/' // Cookie is accessible throughout the entire site
         });
 
         // Store the login information
