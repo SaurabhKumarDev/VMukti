@@ -18,7 +18,7 @@ const adminAccessedCameraDetail = async (req, res) => {
 
             // Check camera exist
             if (Object.keys(cameras).length === 0) {
-                return res.status(204).send("No camera available");
+                return res.status(204).json({ message: "No camera available" });
             }
 
             // Result
@@ -43,14 +43,14 @@ const adminFetchedCameraByUserId = async (req, res) => {
         }
 
         // Check the user role
-        if (isUserExist.role === "Super admin" || isUserExist.role === "Admin" || isUserExist.role === "Manager") {
+        if (["Super admin", "Admin", "Manager"].includes(isUserExist.role)) {
 
             // Fetch camera
             const isCamera = await camera.find({ user: req.params.userID });
 
             // Check camera exist
             if (Object.keys(isCamera).length === 0) {
-                return res.status(204).send("Camera doesn't exist");
+                return res.status(204).json({ message: "Camera doesn't exist" });
             }
             return res.status(200).json({ message: "Camera fetched successfully", camera: isCamera });
         } else {
@@ -77,7 +77,7 @@ const userCameraDetail = async (req, res) => {
 
         // Check camera exist
         if (Object.keys(cameraExist).length === 0) {
-            return res.status(204).send("Camera doesn't exist");
+            return res.status(204).json({ message: "Camera doesn't exist" });
         }
         return res.status(200).json({ message: "Camera fetched successfully", camera: cameraExist });
     } catch (error) {

@@ -10,7 +10,7 @@ router.post('/add', fetchedUser, addCamera);
 router.get('/all/fetch', fetchedUser, adminAccessedCameraDetail)
 
 // Fetch camer using user id
-router.get('all/fetch/:userID', fetchedUser, adminFetchedCameraByUserId);
+router.get('/all/fetch/:userID', fetchedUser, adminFetchedCameraByUserId);
 
 // Fetch camera by user
 router.get('/fetch', fetchedUser, userCameraDetail);
