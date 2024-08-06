@@ -1,0 +1,76 @@
+/* Custom Styles */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f9;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .App {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  footer {
+    text-align: center;
+    padding: 20px 0;
+    font-size: 14px;
+    color: #666;
+  }
+  
+  /* Card Styles */
+  .card {
+    margin-bottom: 20px;
+    border-radius: 8px;
+  }
+  
+  .card-header {
+    background-color: #e91e63;
+    color: #fff;
+    padding: 10px;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+  }
+  
+  .inner-card {
+    margin-top: 10px;
+    background-color: #f8f9fa;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+  }
+  
+  .inner-card-header {
+    background-color: #343a40;
+    color: #fff;
+    padding: 5px 10px;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+  }
+  
+  .inner-card-body {
+    padding: 10px;
+  }
+  
+  .card-body {
+    padding: 15px;
+  }
+  
+  .card-title {
+    font-size: 18px;
+    margin-bottom: 10px;
+  }
+  
+  .card-text {
+    margin-bottom: 10px;
+  }
+  
+  .card-text p {
+    margin: 0;
+  }
+  
+  .no-data {
+    color: #999;
+    font-style: italic;
+  }
+  

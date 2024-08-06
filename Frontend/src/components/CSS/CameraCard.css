@@ -1,0 +1,79 @@
+.card {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  margin: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  width: 300px;
+  display: inline-block;
+  vertical-align: top;
+}
+
+.card-header {
+  background-color: #007bff;
+  color: white;
+  padding: 12px;
+  font-size: 1.25rem;
+  text-align: center;
+}
+
+.card-body {
+  padding: 12px;
+}
+
+.card-title {
+  font-size: 1.25rem;
+  margin-bottom: 12px;
+  text-align: center;
+}
+
+.card-text {
+  margin-bottom: 8px;
+}
+
+.list-group-item {
+  padding: 6px 12px;
+  border-bottom: 1px solid #ddd;
+  font-size: 0.9rem;
+}
+
+.list-group-item:last-child {
+  border-bottom: none;
+}
+
+.button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  cursor: pointer;
+  border-radius: 4px;
+  margin-top: 16px;
+  display: block;
+  width: 100%;
+  text-align: center;
+  text-decoration: none;
+}
+
+.button:hover {
+  background-color: #0056b3;
+}
+
+.badge {
+  background-color: #28a745;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  margin-left: 8px;
+}
+
+.badge.offline {
+  background-color: #dc3545;
+}
+
+.container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
