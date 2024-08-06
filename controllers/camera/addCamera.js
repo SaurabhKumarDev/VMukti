@@ -6,13 +6,23 @@ module.exports = async (req, res) => {
         // User successfully fetched
         const isUserExist = await user.findById(req.User)
         if (!isUserExist) {
-            console.error("Unexpected error occure, login again");
             return res.status(404).json({ error: "Unexpected error occured", message: "Login again" });
+        }
+        if (isUserExist.role === "User") {
+            return res.status(403).json({ error: "Permission denied", message: "You are not allowed to add camera" });
+        }
+
+        // Check the customer id
+        const addCameraToThisUser = await user.findById({ _id: req.params.customerid });
+        if (!addCameraToThisUser) {
+            return res.status(404).json({ error: "Customer not found" });
+        }
+        if (["Super admin", "Admin", "Manager"].includes(addCameraToThisUser.role)) {
+            return res.status(403).json({ error: "Permission denied", message: "You are only able to add camera to the user" });
         }
 
         // Check the request body
         if (Object.keys(req.body).length === 0) {
-            console.log("Request body is empty");
             return res.status(400).json({ error: "Request body is empty", message: "Add camera detail for adding" })
         }
 
@@ -49,7 +59,7 @@ module.exports = async (req, res) => {
 
         // Adding the camera detail
         await camera.create({
-            user: req.User,
+            user: req.params.customerid,
             cameraid,
             customerid,
             cameraname,

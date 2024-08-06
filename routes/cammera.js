@@ -4,7 +4,7 @@ const { adminAccessedCameraDetail, userCameraDetail, adminFetchedCameraByUserId,
 const addCamera = require('../controllers/camera/addCamera');
 
 // Add camera
-router.post('/add', fetchedUser, addCamera);
+router.post('/add/:customerid', fetchedUser, addCamera);
 
 // Fetch all camera by super admin
 router.get('/all/fetch', fetchedUser, adminAccessedCameraDetail)
