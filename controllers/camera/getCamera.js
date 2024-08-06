@@ -1,5 +1,13 @@
 const user = require("../../models/user");
 const camera = require("../../models/cammera");
+const axios = require('axios');
+const https = require("https");     // Create custom agent
+
+// Create an https agent with rejectUnauthorized set to false
+// this will allow us to bypass SSL Certificate verification
+const httpsAgent = new https.Agent({
+    rejectUnauthorized: false,
+});
 
 const adminAccessedCameraDetail = async (req, res) => {
     try {
@@ -63,7 +71,6 @@ const adminFetchedCameraByUserId = async (req, res) => {
     }
 }
 
-
 const userCameraDetail = async (req, res) => {
     try {
         // User successfully fetched
@@ -86,4 +93,25 @@ const userCameraDetail = async (req, res) => {
     }
 };
 
-module.exports = { adminAccessedCameraDetail, userCameraDetail, adminFetchedCameraByUserId };
+const fetchCameraViaURL = async (req, res) => {
+    try {
+        // Check if the URL is defined in the environment variables
+        if (!process.env.FETCH_URL_FOR_DATA) {
+            throw new Error("URL is not defined");
+        }
+
+        // Fetch data from the specified URL using Axios with the custom https agent
+        const response = await axios.get(process.env.FETCH_URL_FOR_DATA, { httpsAgent });
+        // Fetched data
+        const responseData = response.data;
+
+        // Output of the data
+        return res.status(200).json(responseData);
+    } catch (error) {
+        // Handle errors that occur during the Axios request
+        console.error("Sorry, some server error occurred:", error);
+        res.status(500).json({ message: "Sorry, some server error occurred", error }); // Send an error response
+    }
+}
+
+module.exports = { adminAccessedCameraDetail, userCameraDetail, adminFetchedCameraByUserId, fetchCameraViaURL };

@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const fetchedUser = require('../middlewares/fetchUser');
-const { adminAccessedCameraDetail, userCameraDetail, adminFetchedCameraByUserId } = require('../controllers/camera/getCamera');
+const { adminAccessedCameraDetail, userCameraDetail, adminFetchedCameraByUserId, fetchCameraViaURL } = require('../controllers/camera/getCamera');
 const addCamera = require('../controllers/camera/addCamera');
 
 // Add camera
@@ -14,5 +14,8 @@ router.get('/all/fetch/:userID', fetchedUser, adminFetchedCameraByUserId);
 
 // Fetch camera by user
 router.get('/fetch', fetchedUser, userCameraDetail);
+
+// Fetch URL Camera details
+router.get('/fetch/url', fetchedUser, fetchCameraViaURL);
 
 module.exports = router;
