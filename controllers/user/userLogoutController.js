@@ -1,5 +1,6 @@
 const User = require('../../models/user');
 const LoginInfo = require('../../models/loginInfo');
+const MongoStore = require('connect-mongo');
 
 // Logging out by the super admin
 const adminLogOut = async (req, res) => {
@@ -32,9 +33,21 @@ const adminLogOut = async (req, res) => {
 
         const userId = userActive.user_id;
         await User.updateOne({ _id: userId }, { $pull: { 'tokens': { token: userActive.token } } });
-        // res.clearCookie('jwt')
-        console.log(`User logged out: ${userActive.user_id}, Removed by: ${req.User}`);
-        return res.status(200).json({ message: "User logged out and deleted from our database successfully" });
+
+        // Destroy the session
+        const sessionStore = MongoStore.create({
+            mongoUrl: process.env.MONGO_DB_NAME,
+            collectionName: "session"
+        })
+        // Assuming sessionID is stored in req.sessionID
+        sessionStore.destroy(userActive.session_id, (err) => {
+            if (err) {
+                return res.status(500).json({ error: 'Failed to destroy session' });
+            }
+            console.log(`User logged out: ${userActive.user_id}, Removed by: ${req.User}`);
+            return res.status(200).json({ message: "User logged out and deleted from our database successfully" });
+        });
+
     } catch (error) {
         console.error("An error occurred while logging out the user", error);
         return res.status(500).json({ error: error.message, message: "An error occurred while logging out the user" });
