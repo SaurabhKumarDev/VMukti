@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const { body } = require('express-validator');
 const fetchUser = require("../middlewares/fetchUser");
+const sessionHandler = require('../middlewares/session');
 
 // Importing controllers
 const registerController = require('../controllers/user/registerController');
@@ -11,7 +12,6 @@ const forgetPassword = require('../controllers/user/passwordForgetController');
 const { selfAccountDeletion, adminRemoveUser } = require('../controllers/user/deleteController');
 const { allLogedInDevice, ownLoginDevice } = require('../controllers/user/checkDeviceLoggedInController');
 const { adminLogOut, userLogout } = require('../controllers/user/userLogoutController');
-// const sessionHandler = require('../middlewares/session');
 
 // Register
 router.post('/register', [
@@ -30,10 +30,10 @@ router.post('/login', [
 ], loginController);
 
 // Fetch user
-router.get('/fetch', fetchUser, fetchController);
+router.get('/fetch', fetchUser, sessionHandler, fetchController);
 
 // Update user by admin & Own
-router.put('/update/:id', fetchUser, [
+router.put('/update/:id', fetchUser, sessionHandler, [
     body("name").optional().isLength({ min: 3 }).withMessage("Name length should be at least 3 characters"),
     body("email").optional().isEmail().withMessage("Enter a valid email"),
     body("role").optional().trim(),
@@ -49,21 +49,21 @@ router.patch('/forget', [
 ], forgetPassword);
 
 // Delete user account by admin
-router.delete('/delete/:id', fetchUser, adminRemoveUser);
+router.delete('/delete/:id', fetchUser, sessionHandler, adminRemoveUser);
 
 // Delete user account by user
-router.delete('/delete', fetchUser, selfAccountDeletion);
+router.delete('/delete', fetchUser, sessionHandler, selfAccountDeletion);
 
 // All logged-in devices for the super admin
-router.get('/all/loginfo/:id', fetchUser, allLogedInDevice);
+router.get('/all/loginfo/:id', fetchUser, sessionHandler, allLogedInDevice);
 
 // Specific user checks their own logged-in devices
-router.get('/loginfo', fetchUser, ownLoginDevice);
+router.get('/loginfo', fetchUser, sessionHandler, ownLoginDevice);
 
 // Log out by the user where multiple devices are logged in using their credentials
-router.get('/logout', fetchUser, userLogout);
+router.get('/logout', fetchUser, sessionHandler, userLogout);
 
 // Logging out via super admin to any device
-router.get('/admin/logout/:id', fetchUser, adminLogOut);
+router.get('/admin/logout/:id', fetchUser, sessionHandler, adminLogOut);
 
 module.exports = router;

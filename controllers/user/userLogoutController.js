@@ -31,7 +31,7 @@ const adminLogOut = async (req, res) => {
         );
 
         const userId = userActive.user_id;
-        await User.updateOne({_id: userId}, { $pull: { 'tokens': { token: userActive.token } } });
+        await User.updateOne({ _id: userId }, { $pull: { 'tokens': { token: userActive.token } } });
         // res.clearCookie('jwt')
         console.log(`User logged out: ${userActive.user_id}, Removed by: ${req.User}`);
         return res.status(200).json({ message: "User logged out and deleted from our database successfully" });
@@ -44,7 +44,7 @@ const adminLogOut = async (req, res) => {
 // Regular user logout
 const userLogout = async (req, res) => {
     try {
-        // Extract the token from the request header
+        // Extract the token from the request cookies
         // const token = req.header('Auth-token');
         const token = req.cookies['jwt']
 
@@ -59,11 +59,22 @@ const userLogout = async (req, res) => {
             return res.status(400).json({ message: "User is already logged out or invalid token" });
         }
 
+        // Remove the token from the user's tokens array
         await User.findByIdAndUpdate(req.User, { $pull: { 'tokens': { token } } });
+
+        // Clear the JWT token & Session from the client-side
         res.clearCookie('jwt')
         res.clearCookie('session')
-        console.log("User logged out successfully");
-        return res.status(200).json({ message: "User logged out successfully" });
+
+        // Destroy the session
+        req.session.destroy(err => {
+            if (err) {
+                return res.status(500).json({ error: 'Failed to destroy session' });
+            }
+            res.clearCookie('connect.sid');
+            console.log("User logged out successfully");
+            return res.status(200).json({ message: 'User logged out successfully' });
+        });
     } catch (error) {
         console.error("An error occurred during user logout", error);
         return res.status(500).json({ error: error.message, message: "An error occurred during user logout" });

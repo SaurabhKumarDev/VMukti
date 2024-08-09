@@ -22,6 +22,7 @@ module.exports = async (req, res, next) => {
         const isValidToken = await user.findOne({ _id: isCorrectToken.User.id, 'tokens.token': authToken })
         if (!isValidToken) {
             res.clearCookie('jwt')
+            res.clearCookie('session')
             console.error("Invalid token, login again");
             return res.status(401).json({ error: "Provided token is invalid", message: "Login again" })
         }
