@@ -84,12 +84,7 @@ function FetchUser() {
                 <div className='d-flex justify-content-between gap-5 align-items-center mx-3'>
                     <h1 className='text-center my-5'>Fetch User</h1>
                     <div className='input-group' style={{ width: "max-content" }}>
-                        {/* <div className="form-outline" data-mdb-input-init> */}
                         <input type='search' className='form-control' placeholder='Search user by name...' aria-label='Search users by name' value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
-                        {/* </div>
-                        <button type="button" className="btn btn-primary" data-mdb-ripple-init>
-                            <i className="fa fa-search" aria-hidden="true"></i>
-                        </button> */}
                     </div>
                 </div>
                 <table className="table table-striped table-bordered">
@@ -97,17 +92,6 @@ function FetchUser() {
                         <tr>
                             <th scope="col">Name</th>
                             <th scope="col">Email</th>
-                            {/* <th scope="col"> */}
-                            {/* <div className="dropdown">
-                                    <button className="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        Role
-                                    </button>
-                                    <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                        
-                                        
-                                        
-                                    </div>
-                                </div> */}
                             <div class="dropdown">
                                 <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     Role
@@ -118,7 +102,6 @@ function FetchUser() {
                                     <li><button className="dropdown-item" onClick={() => setRole("Manager")}>Manager</button></li>
                                 </ul>
                             </div>
-                            {/* </th> */}
                             <th scope="col">Email Verified</th>
                             <th scope="col">Account Creation Date</th>
                             <th scope="col">Actions</th>
