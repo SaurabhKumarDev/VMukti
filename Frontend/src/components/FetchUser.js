@@ -5,6 +5,8 @@ import { useNavigate } from 'react-router-dom';
 function FetchUser() {
     const [userData, setUserData] = useState([]);
     const naviagte = useNavigate()
+    const [searchTerm, setSearchTerm] = useState('');
+    const [role, setRole] = useState('');
 
     const fetchUserData = async () => {
         try {
@@ -71,16 +73,52 @@ function FetchUser() {
         }
     };
 
+    const filteredData = userData.filter(user =>
+        user.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
+        user.role.toLowerCase().includes(role.toLowerCase())
+    );
+
     return (
         localStorage.getItem('token') ?
-            <div className="container mt-5">
-                <h2 className="text-center mb-4">Fetch Users</h2>
+            <div className="container">
+                <div className='d-flex justify-content-between gap-5 align-items-center mx-3'>
+                    <h1 className='text-center my-5'>Fetch User</h1>
+                    <div className='input-group' style={{ width: "max-content" }}>
+                        {/* <div className="form-outline" data-mdb-input-init> */}
+                        <input type='search' className='form-control' placeholder='Search user by name...' aria-label='Search users by name' value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
+                        {/* </div>
+                        <button type="button" className="btn btn-primary" data-mdb-ripple-init>
+                            <i className="fa fa-search" aria-hidden="true"></i>
+                        </button> */}
+                    </div>
+                </div>
                 <table className="table table-striped table-bordered">
                     <thead className="thead-dark">
                         <tr>
                             <th scope="col">Name</th>
                             <th scope="col">Email</th>
-                            <th scope="col">Role</th>
+                            {/* <th scope="col"> */}
+                            {/* <div className="dropdown">
+                                    <button className="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        Role
+                                    </button>
+                                    <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                        
+                                        
+                                        
+                                    </div>
+                                </div> */}
+                            <div class="dropdown">
+                                <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Role
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><button className="dropdown-item" onClick={() => setRole("User")}>User</button></li>
+                                    <li><button className="dropdown-item" onClick={() => setRole("Admin")}>Admin</button></li>
+                                    <li><button className="dropdown-item" onClick={() => setRole("Manager")}>Manager</button></li>
+                                </ul>
+                            </div>
+                            {/* </th> */}
                             <th scope="col">Email Verified</th>
                             <th scope="col">Account Creation Date</th>
                             <th scope="col">Actions</th>
@@ -89,8 +127,8 @@ function FetchUser() {
                         </tr>
                     </thead>
                     <tbody>
-                        {userData.length > 0 ? (
-                            userData.map((user, index) => (
+                        {filteredData.length > 0 ? (
+                            filteredData.map((user, index) => (
                                 <tr key={index}>
                                     <td>{user.name ? user.name : "Unknown"}</td>
                                     <td>{user.email}</td>

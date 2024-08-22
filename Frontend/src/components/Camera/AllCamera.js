@@ -3,10 +3,11 @@ import '../CSS/CameraCard.css';
 
 function AllCamera() {
     const [data, setData] = useState([]);
+    const [searchTerm, setSearchTerm] = useState('');
 
     const fetchData = async () => {
         try {
-            const response = await fetch(`http://192.168.29.2:5000/api/camera/all/fetch`, { 
+            const response = await fetch(`http://192.168.29.2:5000/api/camera/all/fetch`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -30,12 +31,26 @@ function AllCamera() {
         fetchData();
     }, []);
 
+    const filteredData = data.filter(item =>
+        item.cameraid.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
     return (
         localStorage.getItem('token') ? (
             <div>
-                <h1 className='text-center my-5'>Camera Dashboard</h1>
+                <div className='d-flex justify-content-between align-items-center my-5 mx-3'>
+                    <h1 className='text-center my-5'>Camera Dashboard</h1>
+                    <div className='input-group' style={{ width: "max-content" }}>
+                        <div className="form-outline" data-mdb-input-init>
+                            <input type='search' className='form-control' placeholder='Search by Camera ID...' aria-label='Search cameras by ID' value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
+                        </div>
+                        <button type="button" className="btn btn-primary" data-mdb-ripple-init>
+                            <i className="fa fa-search" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                </div>
                 <div className="container">
-                    {data.length > 0 ? data.map((item, index) => (
+                    {filteredData.length > 0 ? filteredData.map((item, index) => (
                         <div key={index} className="card mb-3">
                             <div className="card-header">
                                 {item.cameraname} <span className={`badge ${item.islive ? '' : 'offline'}`}>{item.islive ? 'Live' : 'Offline'}</span>
