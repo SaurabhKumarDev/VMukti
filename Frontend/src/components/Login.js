@@ -20,7 +20,7 @@ function Login() {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ email, password, platform: deviceInfo.deviceType, browser: deviceInfo.browserName }),
+                body: JSON.stringify({ email, password, platform: deviceInfo.deviceType, browser: deviceInfo.browserName, private_ip: deviceInfo.private_ip }),
                 credentials: 'include'
             });
             const data = await response.json();
@@ -36,14 +36,21 @@ function Login() {
         }
     };
 
-    function getSystemInfo() {
+    async function getPrivateIp() {
+        const response = await fetch('https://api.ipify.org?format=json');
+        const data = await response.json();
+        return data.ip;
+    }
+
+    async function getSystemInfo() {
         const userAgent = navigator.userAgent;
         let deviceType = /Mobi|Android/i.test(userAgent) ? "Mobile" : "Desktop";
         let browserName = getBrowserName(userAgent);
+        let private_ip =  await getPrivateIp();
         if (navigator.brave) {
             browserName = "Brave";
         }
-        setDeviceInfo({ deviceType, browserName });
+        setDeviceInfo({ deviceType, browserName, private_ip });
         console.log(deviceInfo);
     }
 

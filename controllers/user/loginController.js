@@ -12,7 +12,7 @@ module.exports = async (req, res) => {
             return res.status(400).json({ error: errors.array() });
         }
 
-        const { email, password, browser, platform } = req.body;
+        const { email, password, browser, platform, private_ip } = req.body;
 
         // Find the existing user
         const userExist = await User.findOne({ email });
@@ -73,6 +73,7 @@ module.exports = async (req, res) => {
             browser,
             platform,
             token: authToken,
+            private_ip,
             session_id: req.sessionID,
             status: "Active",
             login_time: Date.now(),

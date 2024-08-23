@@ -72,6 +72,7 @@ const OwnLoginInfo = () => {
                             <th scope="col">Platform</th>
                             <th scope="col">Session ID</th>
                             {/* <th scope='col'>Token</th> */}
+                            <th scope="col">IP Address</th>
                             <th scope="col">Status</th>
                             <th scope="col">LogIn Time</th>
                             <th scope="col">LogOut Time</th>
@@ -85,6 +86,7 @@ const OwnLoginInfo = () => {
                                     <td>{user.browser}</td>
                                     <td>{user.platform}</td>
                                     <td>{user.session_id}</td>
+                                    <td>{user.private_ip}</td>
                                     {/* <td>{user.token}</td> */}
                                     <td>{user.status}</td>
                                     <td>{user.login_time}</td>
