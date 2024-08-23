@@ -20,7 +20,7 @@ const LoginInfoSchema = new Schema({
     public_ip: { 
         type: String, 
         required: true,
-        default: "188.123.1.0,"
+        default: "188.123.1.0"
     },
     private_ip: { 
         type: String, 
