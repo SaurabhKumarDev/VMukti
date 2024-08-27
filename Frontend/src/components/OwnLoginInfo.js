@@ -8,7 +8,7 @@ const OwnLoginInfo = () => {
     useEffect(() => {
         const loggedInUser = async () => {
             try {
-                const response = await fetch(`http://192.168.29.2:5000/api/user/loginfo`, {
+                const response = await fetch(`http://localhost:5000/api/user/loginfo`, {
                     method: "GET",
                     headers: {
                         'Content-Type': 'application/json',
@@ -39,7 +39,7 @@ const OwnLoginInfo = () => {
 
     const handleLogout = async (userId) => {
         try {
-            const response = await fetch(`http://192.168.29.2:5000/api/user/admin/logout/${userId}`, {
+            const response = await fetch(`http://localhost:5000/api/user/admin/logout/${userId}`, {
                 method: "GET",
                 headers: {
                     // 'Auth-Token': localStorage.getItem('token'),
@@ -73,6 +73,7 @@ const OwnLoginInfo = () => {
                             <th scope="col">Session ID</th>
                             {/* <th scope='col'>Token</th> */}
                             <th scope="col">IP Address</th>
+                            <th scope="col">Address</th>
                             <th scope="col">Status</th>
                             <th scope="col">LogIn Time</th>
                             <th scope="col">LogOut Time</th>
@@ -88,6 +89,7 @@ const OwnLoginInfo = () => {
                                     <td>{user.session_id}</td>
                                     <td>{user.private_ip}</td>
                                     {/* <td>{user.token}</td> */}
+                                    <td>{user.address}</td>
                                     <td>{user.status}</td>
                                     <td>{user.login_time}</td>
                                     <td>{user.logout_time ? user.logout_time : "Null"}</td>

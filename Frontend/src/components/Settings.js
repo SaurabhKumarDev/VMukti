@@ -10,7 +10,7 @@ const Setting = () => {
 
     const handleDeleteAccount = async () => {
         // Perform account deletion logic here
-        const responseOfDelete = await fetch("http://192.168.29.2:5000/api/user/delete", {
+        const responseOfDelete = await fetch("http://localhost:5000/api/user/delete", {
             method: 'DELETE',
             headers: {
                 // "Auth-token": localStorage.getItem('token'),

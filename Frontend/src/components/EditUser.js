@@ -21,7 +21,7 @@ function EditUser() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await fetch(`http://192.168.29.2:5000/api/user/update/${userId}`, {
+            const response = await fetch(`http://localhost:5000/api/user/update/${userId}`, {
                 method: "PUT",
                 headers: {
                     'Content-Type': 'application/json',

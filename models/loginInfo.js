@@ -32,6 +32,11 @@ const LoginInfoSchema = new Schema({
         required: true, 
         unique: true 
     },
+    address: {
+        type: String,
+        required: true,
+        default: "India"
+    },
     token: {
         type: String,
         required: true,

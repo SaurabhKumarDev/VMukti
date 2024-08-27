@@ -6,7 +6,7 @@ function Navbar() {
 
     const logout = async () => {
         try {
-            const responseOfLogOut = await fetch("http://192.168.29.2:5000/api/user/logout", {
+            const responseOfLogOut = await fetch("http://localhost:5000/api/user/logout", {
                 method: 'GET',
                 headers: {
                     // "Auth-token": localStorage.getItem('token'),

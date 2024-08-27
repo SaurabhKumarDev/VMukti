@@ -14,7 +14,7 @@ function SpecificUser() {
 
         const fetchLoggedInUser = async () => {
             try {
-                const response = await fetch(`http://192.168.29.2:5000/api/user/all/loginfo/${params.id}`, {
+                const response = await fetch(`http://localhost:5000/api/user/all/loginfo/${params.id}`, {
                     method: "GET",
                     headers: {
                         'Content-Type': 'application/json',
@@ -48,7 +48,7 @@ function SpecificUser() {
     const handleLogout = async (userId) => {
         console.log(userId);
         try {
-            const response = await fetch(`http://192.168.29.2:5000/api/user/admin/logout/${userId}`, {
+            const response = await fetch(`http://localhost:5000/api/user/admin/logout/${userId}`, {
                 method: "GET",
                 headers: {
                     // 'Auth-Token': localStorage.getItem('token'),

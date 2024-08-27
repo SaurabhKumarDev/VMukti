@@ -10,7 +10,7 @@ function FetchUser() {
 
     const fetchUserData = async () => {
         try {
-            const response = await fetch('http://192.168.29.2:5000/api/user/fetch', {
+            const response = await fetch('http://localhost:5000/api/user/fetch', {
                 method: "GET",
                 headers: {
                     'Content-Type': 'application/json',
@@ -52,7 +52,7 @@ function FetchUser() {
 
     const deleteThisUser = async (userId) => {
         try {
-            const response = await fetch(`http://192.168.29.2:5000/api/user/delete/${userId}`, {
+            const response = await fetch(`http://localhost:5000/api/user/delete/${userId}`, {
                 method: "DELETE",
                 headers: {
                     // 'Auth-Token': localStorage.getItem('token')

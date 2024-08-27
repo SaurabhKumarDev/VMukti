@@ -9,7 +9,7 @@ function SignUp() {
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
-            const response = await fetch('http://192.168.29.2:3001/api/user/register', {
+            const response = await fetch('http://localhost:3001/api/user/register', {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json'

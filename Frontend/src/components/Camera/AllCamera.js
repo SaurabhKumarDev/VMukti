@@ -7,7 +7,7 @@ function AllCamera() {
 
     const fetchData = async () => {
         try {
-            const response = await fetch(`http://192.168.29.2:5000/api/camera/all/fetch`, {
+            const response = await fetch(`http://localhost:5000/api/camera/all/fetch`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
