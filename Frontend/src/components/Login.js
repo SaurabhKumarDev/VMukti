@@ -20,9 +20,9 @@ function Login() {
                 body: JSON.stringify({
                     email,
                     password,
-                    platform: deviceInfo?.deviceType,
-                    browser: deviceInfo?.browserName,
-                    private_ip: deviceInfo?.private_ip,
+                    platform: deviceInfo.deviceType,
+                    browser: deviceInfo.browserName,
+                    private_ip: deviceInfo.private_ip,
                     address: address
                 }),
                 credentials: 'include'
